@@ -1,0 +1,402 @@
+<html>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0, maximum-scale=1.0,user-scalable=yes" />
+    <meta charset="utf-8" />
+    <style>
+        /*body {background:darkgray;}*/
+        div#debug, td {
+            font-size:9pt;
+            line-height:110%;
+            padding:0 2 1 2;
+        }
+        table.PaperWin {
+            margin-left:2px;
+            border:1px black solid;
+            background-color:#ccffcc;
+            /*height:*/
+        }
+        table.PaperWin tr.bingo3 td.red,
+        table.PaperWin tr.bingo4 td.red,
+        table.PaperWin tr.bingo5 td.red,
+        table.PaperWin tr.bingo6 td.red {
+            border:1px red solid;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+        table.PaperWin td.red {
+            border:1px gray solid;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+        table.paper {
+            margin-left:2px;
+            border:1px black solid;
+            /*height:*/
+        }
+        table.paper td, table.PaperWin td {
+            width:12px;
+            border:1px white solid;
+            text-align:center;
+        }
+        table.paper td.red{
+            border:1px gray solid;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+        table.paper td.blue, table.PaperWin td.blue {
+            /*border:1px blue solid;*/
+            /*border:1px blue dotted;*/
+            /**/border:1px lightblue solid;/**/
+            /*border:1px lightblue dotted;*/
+            /*border:1px lightgray solid;*/
+            /*border:1px lightgray dotted;*/
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+        tr.bingo3{
+            background-color:#ccccff;
+        }
+        tr.bingo4{
+            background-color:#009999;
+        }
+        tr.bingo5{
+            background-color:#ff9999;
+        }
+        tr.bingo6{
+            background-color:#660066;
+        }
+
+        select{
+        /*
+            font-size: 50px;
+        */
+        }
+        @-ms-viewport {width:device-width;}
+        @-o-viewport {width:device-width;}
+        @viewport {width:device-width;}
+
+        .tbl_data_col td{
+            text-align:right;
+        }
+
+        div.money {
+            width:100%;
+        }
+    </style>
+    <script src="lib/lib.js"></script>
+    <script>
+        var DEBUG = !true;
+        var paper = [
+            [[ 1, 18, 19, 34, 36, 38],
+             [ 1,  8, 14, 27, 28, 38],
+             [ 6, 15, 24, 29, 31, 41],
+             [ 7, 12, 29, 30, 33, 35],
+             [ 6, 25, 27, 34, 41, 43]],
+
+            [[ 2, 18, 20, 24, 30, 39],
+             [ 4, 12, 13, 16, 17, 38],
+             [ 2, 16, 23, 29, 34, 40],
+             [ 1, 13, 22, 28, 38, 40],
+             [14, 19, 22, 35, 40, 41]],
+
+            [[ 8, 11, 12, 37, 38, 45],
+             [ 3, 13, 17, 20, 26, 32],
+             [16, 18, 39, 43, 44, 45],
+             [ 5, 19, 21, 25, 28, 42],
+             [ 4, 10, 15, 20, 31, 43]],
+
+            [[ 1,  5, 12, 17, 34, 44],
+             [ 2,  7, 10, 18, 25, 32],
+             [ 8, 14, 19, 22, 30, 38],
+             [ 3,  6, 13, 25, 36, 37],
+             [ 1,  9, 31, 35, 36, 41]],
+
+            [[ 1,  6, 14, 31, 32, 38],
+             [ 2, 24, 26, 33, 41, 45],
+             [ 3, 21, 23, 26, 30, 42],
+             [10, 15, 20, 24, 31, 35],
+             [ 1,  7,  9, 14, 34, 45]],
+
+            [[ 3, 24, 25, 28, 32, 39],
+             [ 9, 21, 29, 30, 36, 38],
+             [18, 19, 26, 32, 38, 42],
+             [ 1,  8, 13, 16, 40, 45],
+             [ 5,  8, 28, 33, 34, 35]],
+
+            [[ 3, 15, 34, 35, 43, 45],
+             [ 2,  7, 13, 28, 30, 41],
+             [16, 17, 19, 20, 32, 36],
+             [ 2,  3, 17, 26, 30, 40],
+             [ 6,  8, 11, 13, 28, 39]],
+
+            [[ 4,  6,  9, 10, 16, 28],
+             [ 5,  7, 15, 19, 23, 32],
+             [ 4, 11, 17, 24, 34, 41],
+             [ 4,  6,  8, 23, 35, 41],
+             [ 6, 10, 23, 24, 30, 44]],
+
+            [[ 6,  7, 20, 22, 32, 33],
+             [ 5,  7, 11, 29, 31, 40],
+             [ 5,  7,  9, 10, 28, 44],
+             [ 5,  8, 11, 23, 33, 38],
+             [11, 15, 16, 29, 37, 43]],
+
+            [[ 4,  7, 27, 30, 33, 42],
+             [ 2, 14, 17, 27, 28, 29],
+             [ 3,  4, 10, 11, 21, 22],
+             [ 1,  9, 11, 14, 25, 34],
+             [ 2, 11, 16, 23, 29, 45]],
+
+            [[ 5,  7,  8, 13, 16, 33],
+             [ 1,  9, 10, 15, 17, 37],
+             [ 6,  7, 18, 28, 29, 44],
+             [ 6, 20, 29, 36, 40, 41],
+             [ 1, 13, 14, 29, 39, 44]],
+
+            [[ 5,  7, 10, 17, 19, 42],
+             [ 2, 27, 30, 33, 38, 43],
+             [ 3,  7, 15, 16, 37, 43],
+             [11, 23, 25, 26, 31, 41],
+             [ 5, 10, 30, 39, 41, 45]]
+        ];
+        var data = {};
+        var url = 'lotto.php?drwNo=';
+        var bingoData = [];
+
+        Date.prototype.getWeek = function() {
+            var onejan = new Date(this.getFullYear(),0,1);
+            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+        } 
+
+        function chk(){
+            var html = '';
+            for(var i=0;i<paper.length;i++){
+                if(i%7==6) html+='<br><br><br><br><br><br>';
+                html+='<table class=paper cellspacing=0 cellpadding=0 align=left>';
+                var p = paper[i];
+                for(var j=0; j<p.length; j++){
+                    var line=p[j];
+                    var idx=0;
+                    html+='<tr>';
+                    for(var k=0; k<6; k++){
+                        var flag=true;
+           $('debug2').innerHTML = 'idx=>'+idx + '<Br>'+           $('debug').innerHTML;
+                        for(var l=idx; l<6; l++){
+                            if(line[k] == data.balls[l]){
+                                html += '<td class=red>'+line[k]+'</td>';
+                                flag=false;
+                                idx=l;
+                                break;
+                            }
+                        }
+                        if(flag) html+='<td>'+line[k]+'</td>';
+                    }
+                    html+='</tr>';
+                }
+                html += '</table>';
+            }
+            $('prt2').innerHTML = html;
+        }
+
+        function chk2(){
+            var html = '';
+            bingoData = [];
+            for(var i=0;i<paper.length;i++){
+//                if(i%7==6) html+='<br><br><br><br><br><br>';
+                var phtml='<table class=paper cellspacing=0 cellpadding=0 align=left>';
+                phtml+='<col align=right></col>'
+                      +'<col align=right></col>'
+                      +'<col align=right></col>'
+                      +'<col align=right></col>'
+                      +'<col align=right></col>'
+                      +'<col align=right></col>';
+                var p = paper[i];
+                for(var j=0; j<p.length; j++){
+                    var line=p[j];
+                    var idx=0;
+                    var cnt=0;      // 당첨볼 카운트
+                    var bonusCnt=0; // 보너스볼
+                    htmlCell='';
+                    for(var k=0; k<6; k++){
+                        var flag=true;
+                        for(var l=idx; l<6; l++){
+                            if(line[k] == data.balls[l]){
+                                htmlCell += '<td class=red>'+line[k].to2()+'</td>';
+                                flag=false;
+                                idx=l;
+                                cnt++;
+                                break;
+                            }
+                            if(line[k] == data.bnusNo){
+//                            if(line[k] == '16'){
+                                htmlCell += '<td class=blue>'+line[k].to2()+'</td>';
+                                flag=false;
+                                idx=l;
+                                bonusCnt++;
+                                break;
+                            }
+                        }
+                        if(flag) htmlCell+='<td>'+line[k].to2()+'</td>';
+                    }
+                    phtml+='<tr '+bingoBGColor(cnt)+'>'+htmlCell;
+                    phtml+='</tr>';
+                    if(cnt>2){
+                        htmlCell=htmlCell.replace(/red/g,'blue');
+                        phtml = phtml.replace(/paper/,'PaperWin');
+                    }
+                    if(cnt == 3) bingoData.push('5등');
+                    else if(cnt == 4) bingoData.push('4등');
+                    else if(cnt == 5){
+                        if(bonusCnt) bingoData.push('2등');
+                        else         bingoData.push('3등');
+                    }else if(cnt == 6) bingoData.push('1등');
+                }
+                phtml += '</table>';
+
+                html += phtml;
+            }
+            $('prt2').innerHTML = html;
+            $('bStr').innerHTML = bingoData.join('<Br />');
+
+        }
+
+        function bingoBGColor(cnt){
+            var s=''; //default
+            switch(cnt){
+                case 3:s='class=bingo3';break;
+                case 4:s='class=bingo4';break;
+                case 5:s='class=bingo5';break;
+                case 6:s='class=bingo6';break;
+            }
+            return s;
+        }
+
+        var content = function(rs){
+            $('debug2').innerHTML = '';
+            if(DEBUG) $('debug2').innerHTML = rs.responseText;
+            data = rs.responseText.toJSON();
+            data.balls = [data.drwtNo1,data.drwtNo2,data.drwtNo3,
+                          data.drwtNo4,data.drwtNo5,data.drwtNo6];
+            /*
+             {"bnusNo":12,"firstWinamnt":1352230650,"totSellamnt":55981334000,
+              "returnValue":"success","drwtNo3":22,"drwtNo2":9,"drwtNo1":2,
+              "drwtNo6":45,"drwtNo5":31,"drwtNo4":25,"drwNoDate":"2014-12-06",
+              "drwNo":627,"firstPrzwnerCo":10}
+            */
+            var html = '<table border cellpadding=0><colgroup><col align=center></col><col align=right></col></colgroup>';
+            html += '<tr><td>회차</td><td>'+data.drwNo+'</td></tr>'
+                 +  '<tr><td>추첨일</td><td>'+data.drwNoDate+'</td></tr>'
+                 +  '<tr><td>1등 당첨</td><td>'+data.firstPrzwnerCo.format()+' 명</td></tr>'
+                 +  '<tr><td>1등 당첨금</td><td align=right>'+data.firstWinamnt.format()+' 원</td><td align=right>'+(data.firstWinamnt-Math.round(data.firstWinamnt*0.3053499902)).format()+' 원</td></tr>'
+                 +  '<tr><td>판매금</td><td align=right>'+data.totSellamnt.format()+' 원</td></tr>'
+                 +  '<tr><td>당첨번호</td><td>'+data.drwtNo1
+                                          +', '+data.drwtNo2
+                                          +', '+data.drwtNo3
+                                          +', '+data.drwtNo4
+                                          +', '+data.drwtNo5
+                                          +', '+data.drwtNo6+'</td></tr>'
+                 +  '<tr><td>보너스번호</td><td>'+data.bnusNo+'</td></tr>'
+                 +  '</table>';
+            $('prt').innerHTML = html;
+            //chk();
+
+            chk2();
+
+            // 등수별 금액
+            Ajax('money.php?drwNo='+turnNo.value, function(ts){
+//                alert(ts.responseURL)
+                $('money').innerHTML='<table border class="tbl_data tbl_data_col">'
+                                    +' <thead>'
+                                    +'  <tr>'
+                                    +'   <td>순위</th>'
+                                    +'   <td>등위별 총 당첨금액</td>'
+                                    +'   <td>당첨게임 수</td>'
+                                    +'   <td>1게임당 당첨금액</td>'
+                                    +'  </tr>'
+                                    +' </thead>'
+                                    +'<tr><td>'
+                                    +  ts.responseText
+                                       .replace(/[\r\n]+/g,'') // 줄바꿈 제거
+                                       .replace(/(<([^>]+)>)/ig,"!") // Tag제거
+                                       .replace(/\s/g,"") // 스페이스 제거
+                                       .replace(/!+/g,"!") // ! 1개로 통일
+                                       .match(/\d등![\d,]+,[\d,]+원![\d,]+![\d,]+원/g)
+                                       .join('</td></tr><tr><td>')
+                                       .replace(/!/g,'</td><td>')
+                                    +'</table>';
+            }, exception);
+
+        }
+        var exception = function(e){
+            //alert(e);
+            //$('prt2'  ).innerHTML = e.error;
+            $('prt2'  ).innerHTML = e;
+            $('money' ).innerHTML = e;
+            $('debug2').innerHTML = e;
+        }
+    </script>
+    <body>
+        회차선택 : <select id=turnNo></select>
+        <table>
+         <tr>
+          <td><div id='prt' desc=info></div></td>
+          <td valign=bottom id=bStr></td>
+         </tr>
+        </table>
+        <div id='prt2' desc=paper></div>
+        <div id='money' desc=money><div style="width:200px;"> 로딩중... </div></div>
+        <div id='debug'>Debug</div>
+        <div id='debug2'>Debug2</div>
+        <a href="history.php">History</a> | 
+        <a href="win.php">당첨</a> | 
+        <a href="have_rank.php">보유번호 당첨수</a>
+    </body>
+    <script type="text/javascript">
+        // 디버깅용
+        data={"bnusNo":11,"firstWinamnt":1499942875,"totSellamnt":57253109000,"returnValue":"success","drwtNo3":12,"drwtNo2":7,"drwtNo1":1,"drwtNo6":42,"drwtNo5":23,"drwtNo4":15,"drwNoDate":"2014-12-13","drwNo":628,"firstPrzwnerCo":9};
+
+        data.balls = [data.drwtNo1,data.drwtNo2,data.drwtNo3,
+                      data.drwtNo4,data.drwtNo5,data.drwtNo6];
+            //chk2();
+        // 디버그용
+/*
+        // 회차정보 표시
+        var s = 786; // 2018 시작 회차
+        var w = new Date().getWeek();
+//        for(var i=s; i<=s+w; i++ ){
+        for(var i=s+w; i>0; i-- ){
+            turnNo.options.add(new Option(i,i));
+        }
+*/
+        var sdt = new Date(2002,11,7); // 1회 추첨일
+        var cdt = new Date();
+        var cnt = Math.ceil((cdt-sdt)/(86400000*7)); //회차
+        if(cdt.getDay()==6 && cdt.getHours()<21 ) //토요일 오후 9시 이전엔 이전회차까지 추출
+            cnt--;
+
+        for(var i=cnt; i>0; i-- ){
+            turnNo.options.add(new Option(i,i));
+        }
+        turnNo.value = cnt;
+
+        // 2018년도 마지막 회자 추출
+        Ajax(url+(cnt), content, exception);
+//        alert('rank.php?drwNo='+(cnt))
+        Ajax('rank.php?drwNo='+(cnt), function(rs){
+            $('debug').innerHTML = rs.responseText;
+            if(DEBUG) $('debug').innerHTML = rs.responseText;
+        }, exception);
+
+        turnNo.onchange=function(){
+            $('money').innerHTML='<div style="width:200px;"> 로딩중... </div>';
+//            console.log(url+this.value);
+            $('prt').innerHTML='Loadding...';
+            $('prt2').innerHTML='Loadding...';
+            Ajax(url+this.value, content, exception);
+            Ajax('rank.php?drwNo='+this.value, function(rs){
+                $('debug').innerHTML = rs.responseText;
+                if(DEBUG) $('debug2').innerHTML = rs.responseText;
+            }, exception);
+        }
+
+    </script>
+</html>

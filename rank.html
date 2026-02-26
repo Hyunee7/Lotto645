@@ -1,0 +1,53 @@
+<html>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0, maximum-scale=1.0,user-scalable=yes" />
+    <meta charset="utf-8" />
+    <script src="lib/lib.js"></script>
+    <script>
+        var data = {};
+        var url = 'rank.php?drwNo=';
+        var btn;
+        var start = 1;
+        var next_start = start+100;
+        var exception = function(e){
+            alert(e);
+        }
+        function next(obj){
+            btn=obj;
+            btn.disabled=true;
+            Ajax(url+btn.value, content, exception);
+        }
+        var content = function(rs){
+            data = rs.responseText.toJSON();
+            var no=data.drwNo+1;
+//            alert(no);
+            btn.value = no;
+            btn.innerText = '다음('+no+')';
+            btn.disabled=false;
+            if(no==985){
+                btn.disabled=true;
+                btn.innerText = '종료('+no+')';
+            }else{
+                if(no!=next_start) next(btn);
+                else {
+                    start=next_start;
+                    next_start+=100;
+                }
+            }
+        }
+        window.onload = function(){
+            btn=document.getElementById('btn');
+            btn.value = start;
+            btn.innerText = '다음('+start+')'
+        }
+    </script>
+    <style>
+    button {
+        width:100%;
+        height:400px;
+        font-size:50px;
+    }
+    </style>
+    <body>
+        <button onclick=next(this) value=340 id='btn'>다음(340)</button>
+    </body>
+</html>
