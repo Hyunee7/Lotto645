@@ -1,5 +1,6 @@
 <?php
-header( 'Content-type: text/json' );
+//header( 'Content-type: text/json' );
+header('Content-Type: text/json; charset=UTF-8');
 @error_reporting(E_ALL ^ E_NOTICE);
 
 // 회차번호
@@ -56,8 +57,10 @@ if($data){                                 // 저장된 데이타가 있으면
 }
 
 //$url = 'http://www.645lotto.net/common.do?method=getLottoNumber&drwNo='.$_GET['drwNo'];
-$url = 'https://www.645lotto.net/common.do?method=getLottoNumber&drwNo='.$_GET['drwNo'];
+//$url = 'https://www.645lotto.net/common.do?method=getLottoNumber&drwNo='.$_GET['drwNo'];
 //$url = 'https://www.nlotto.co.kr/common.do?method=getLottoNumber&drwNo='.$drwNo;
+//$url = 'https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo='.$_GET['drwNo'];
+$url = 'https://www.dhlottery.co.kr/lt645/selectPstLt645Info.do?srchLtEpsd='.$_GET['drwNo'];
 //$response = file_get_contents($url);
 /**/
 // 사업자 변경됨에따라 수정함.
@@ -91,9 +94,9 @@ curl_close($ch);
 
 // 수신내용 디코딩
 $lotto = json_decode($response);
-$returnValue    = $lotto->returnValue   ;
-if($returnValue=='success'){ // 실패시 : {"returnValue":"fail"}
-	//	drwNo            INTEGER PRIMARY KEY AUTOINCREMENT,
+if(isset($lotto->returnValue)){
+//	echo '0-0-0-0-0-0-0-0--0-';
+	$returnValue    = $lotto->returnValue   ;
 	$drwNoDate      = $lotto->drwNoDate     ;
 	$totSellamnt    = $lotto->totSellamnt   ;
 	$firstWinamnt   = $lotto->firstWinamnt  ;
@@ -106,6 +109,29 @@ if($returnValue=='success'){ // 실패시 : {"returnValue":"fail"}
 	$drwtNo5        = $lotto->drwtNo5       ;
 	$drwtNo6        = $lotto->drwtNo6       ;
 	$bnusNo         = $lotto->bnusNo        ;
+}else{
+//	echo '1-1-1-1-1-1-1-1--1-';
+//	$returnValue    = $lotto->resultCode   ;
+	$returnValue    = 'success'   ;
+	$drwNoDate      = $lotto->data->list[0]->ltRflYmd     ;
+	$totSellamnt    = $lotto->data->list[0]->rlvtEpsdSumNtslAmt   ;
+	$firstWinamnt   = $lotto->data->list[0]->rnk1WnAmt  ;
+	$firstPrzwnerCo = $lotto->data->list[0]->rnk1WnNope;
+	$firstAccumamnt = 0;
+	$drwtNo1        = $lotto->data->list[0]->tm1WnNo       ;
+	$drwtNo2        = $lotto->data->list[0]->tm2WnNo       ;
+	$drwtNo3        = $lotto->data->list[0]->tm3WnNo       ;
+	$drwtNo4        = $lotto->data->list[0]->tm4WnNo       ;
+	$drwtNo5        = $lotto->data->list[0]->tm5WnNo       ;
+	$drwtNo6        = $lotto->data->list[0]->tm6WnNo       ;
+	$bnusNo         = $lotto->data->list[0]->bnsWnNo        ;
+	//echo '$bnusNo['.$bnusNo.']';
+}
+
+//echo '$returnValue['.$returnValue.']<Br>';
+if($returnValue=='success'){ // 실패시 : {"returnValue":"fail"}
+//	echo "===============================<Br>";
+	//	drwNo            INTEGER PRIMARY KEY AUTOINCREMENT,
 	$result         = $response;
 
 
@@ -125,6 +151,7 @@ if($returnValue=='success'){ // 실패시 : {"returnValue":"fail"}
 									$drwtNo1, $drwtNo2, $drwtNo3, $drwtNo4, $drwtNo5, $drwtNo6,
 									$bnusNo, '$result')";
 	}
+//	echo $sql;
 	$db->busyTimeout(1000);
 	$db->exec($sql) or die($_SERVER["PHP_SELF"].' line '.__LINE__.', SQL : '.$sql);
 }
