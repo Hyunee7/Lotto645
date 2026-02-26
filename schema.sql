@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS history (  -- 당첨번호 내역
 	mod_date         DATETIME DEFAULT (DATETIME('now','localtime'))  -- 수정일시
 );
 --CREATE INDEX idx_history ON history (drwNo);
+ALTER TABLE history ADD COLUMN dhl TEXT;  -- 2026-02-25 동행복권 수신문자열(JSON)
 
 -- 당첨번호 읽은내역
 CREATE TABLE IF NOT EXISTS history_log ( -- 당첨번호 읽은내역

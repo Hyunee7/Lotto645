@@ -81,8 +81,12 @@
         div.money {
             width:100%;
         }
+        
+        td#rnk1SumWnAmt, td#rnk2SumWnAmt, td#rnk3SumWnAmt, td#rnk4SumWnAmt, td#rnk5SumWnAmt {
+            color:#11957D;
+        }
     </style>
-    <script src="lib/lib.js?v=2"></script>
+    <script src="lib/lib.js"></script>
     <script>
         var DEBUG = true;
         var paper = [
@@ -322,7 +326,44 @@ var dhl=[];
 
             chk2();
 
-			return; // 더이상 페이지를 제공하지 않음.
+            if(typeof dhl.data != 'undefined'){ // 변경된 포멧의 경우
+                //회차 = dhl.data.list[0].ltEpsd.format()+' 회차';
+                $('debug3').innerText = dhl.data.list[0].ltEpsd.format()+' 회차';
+            }else{
+                //console.log('기존데이타');
+                Ajax('money.php?drwNo='+turnNo.value, function(ts){
+			        //console.log(ts.responseText)
+        			dhl = ts.responseText.toJSON();
+                    $('debug3').innerText = '기존데이타\n'+dhl.data.list[0].ltEpsd.format()+' 회차';
+                }, exception);
+            }
+                
+                $('rnk1SumWnAmt').innerText = dhl.data.list[0].rnk1SumWnAmt.format()+'원';
+                $('rnk2SumWnAmt').innerText = dhl.data.list[0].rnk2SumWnAmt.format()+'원';
+                $('rnk3SumWnAmt').innerText = dhl.data.list[0].rnk3SumWnAmt.format()+'원';
+                $('rnk4SumWnAmt').innerText = dhl.data.list[0].rnk4SumWnAmt.format()+'원';
+                $('rnk5SumWnAmt').innerText = dhl.data.list[0].rnk5SumWnAmt.format()+'원';
+                
+                $('rnk1WnNope').innerText = dhl.data.list[0].rnk1WnNope.format();
+                $('rnk2WnNope').innerText = dhl.data.list[0].rnk2WnNope.format();
+                $('rnk3WnNope').innerText = dhl.data.list[0].rnk3WnNope.format();
+                $('rnk4WnNope').innerText = dhl.data.list[0].rnk4WnNope.format();
+                $('rnk5WnNope').innerText = dhl.data.list[0].rnk5WnNope.format();
+                
+                $('rnk1WnAmt').innerText = dhl.data.list[0].rnk1WnAmt.format()+'원';
+                $('rnk2WnAmt').innerText = dhl.data.list[0].rnk2WnAmt.format()+'원';
+                $('rnk3WnAmt').innerText = dhl.data.list[0].rnk3WnAmt.format()+'원';
+                $('rnk4WnAmt').innerText = dhl.data.list[0].rnk4WnAmt.format()+'원';
+                $('rnk5WnAmt').innerText = dhl.data.list[0].rnk5WnAmt.format()+'원';
+                
+                $('excelRnk').innerText = dhl.data.list[0].excelRnk + '\n'
+                                        + '자동' + dhl.data.list[0].winType1 + '\n'
+                                        + '수동' + dhl.data.list[0].winType2 + '\n'
+                                        + '반자동' + dhl.data.list[0].winType0;
+                                        
+//            $('debug3').innerText = dhl.data.list[0].ltEpsd.format()+' 회차';
+            return; // 더이상 페이지를 제공하지 않음.
+            
             // 등수별 금액
             Ajax('money.php?drwNo='+turnNo.value, function(ts){
 //                alert(ts.responseURL)
@@ -352,7 +393,7 @@ var dhl=[];
             //alert(e);
             //$('prt2'  ).innerHTML = e.error;
             //$('prt2'  ).innerHTML = e;
-            $('money' ).innerHTML = e;
+            //$('money' ).innerHTML = e;
             $('debug2').innerHTML = e;
         }
     </script>
@@ -365,9 +406,62 @@ var dhl=[];
          </tr>
         </table>
         <div id='prt2' desc=paper></div>
-        <div id='money' desc=money><div style="width:200px;"> 로딩중... [없어짐!!!]</div></div>
+        <div id='money' desc=money>
+          <div style="width:600px;">
+            <table border>
+              <tr>
+                <td align=center>순위</td>
+                <td align=center>등위별 총 당첨금</td>
+                <td align=center>당첨게임 수</td>
+                <td align=center>1게임당 당첨금</td>
+                <td align=center>당첨기준</td>
+                <td align=center>비고</td>
+              </tr>
+              <tr>
+                <td align=center>1등</td>
+                <td align=right  id=rnk1SumWnAmt>31,849,068,384원</td>
+                <td align=center id=rnk1WnNope>12</td>
+                <td align=right  id=rnk1WnAmt>2,654,089,032원</td>
+                <td align=center><font color=#11957D>6개</font>번호 일치</td>
+                <td align=center rowSpan=5 id=excelRnk>1등<Br>
+                    자동11<Br>
+                    수동1<Br>
+                    반자동0</td>
+              </tr>
+              <tr>
+                <td align=center>2등</td>
+                <td align=right  id=rnk2SumWnAmt>4,777,694,634원</td>
+                <td align=center id=rnk2WnNope>74</td>
+                <td align=right  id=rnk2WnAmt>64,563,441원</td>
+                <td align=center><font color=#11957D>5개</font>번호 일치 + <font color=#11957D>보너스</font>번호 일치</td>
+              </tr>
+              <tr>
+                <td align=center>3등</td>
+                <td align=right  id=rnk3SumWnAmt>4,777,697,421원</td>
+                <td align=center id=rnk3WnNope>3,087</td>
+                <td align=right  id=rnk3WnAmt>1,547,683원</td>
+                <td align=center><font color=#11957D>5개</font>번호 일치</td>
+              </tr>
+              <tr>
+                <td align=center>4등</td>
+                <td align=right  id=rnk4SumWnAmt>8,143,550,000원</td>
+                <td align=center id=rnk4WnNope>162,871</td>
+                <td align=right  id=rnk4WnAmt>50,000원</td>
+                <td align=center><font color=#11957D>4개</font>번호 일치</td>
+              </tr>
+              <tr>
+                <td align=center>5등</td>
+                <td align=right  id=rnk5SumWnAmt>13,757,110,000원</td>
+                <td align=center id=rnk5WnNope>2,751,422</td>
+                <td align=right  id=rnk5WnAmt>5,000원</td>
+                <td align=center><font color=#11957D>3개</font>번호 일치</td>
+              </tr>
+            </table>
+          </div>
+        </div>
         <div id='debug'>Debug</div>
         <div id='debug2' style="overflow-wrap: break-word;">Debug2</div>
+        <div id='debug3' style="overflow-wrap: break-word;">Debug3</div>
         <a href="history.php">History</a> | 
         <a href="win.php">당첨</a> | 
         <a href="have_rank.php">보유번호 당첨수</a>
@@ -413,7 +507,7 @@ var dhl=[];
         }, exception);
 
         turnNo.onchange=function(){
-            $('money').innerHTML='<div style="width:200px;"> 로딩중... </div>';
+//            $('money').innerHTML='<div style="width:200px;"> 로딩중... </div>';
 //            console.log(url+this.value);
             $('prt').innerHTML='Loadding...';
             $('prt2').innerHTML='Loadding...';
